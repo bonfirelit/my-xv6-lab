@@ -127,6 +127,8 @@ found:
   p->context.ra = (uint64)forkret;
   p->context.sp = p->kstack + PGSIZE;
 
+  p->mask = 0; // lab2 syscall trace
+
   return p;
 }
 
@@ -292,6 +294,8 @@ fork(void)
   safestrcpy(np->name, p->name, sizeof(p->name));
 
   pid = np->pid;
+
+  np->mask = p->mask;
 
   np->state = RUNNABLE;
 
@@ -692,4 +696,16 @@ procdump(void)
     printf("%d %s %s", p->pid, state, p->name);
     printf("\n");
   }
+}
+
+// lab2 sysinfo, do not forget to add declaration to defs.h
+uint64
+procnum(void)
+{
+  struct proc* p;
+  uint64 n = 0;
+
+  for (p = proc; p < &proc[NPROC] && p->state != UNUSED; p++, n++);
+
+  return n;
 }

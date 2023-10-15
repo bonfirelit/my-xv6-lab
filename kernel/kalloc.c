@@ -80,3 +80,18 @@ kalloc(void)
     memset((char*)r, 5, PGSIZE); // fill with junk
   return (void*)r;
 }
+
+// lab2 sysinfo, do not forget to add declaration to defs.h
+uint64
+freememsz(void)
+{
+  struct run* r = kmem.freelist;
+  uint64 len = 0;
+  
+  while (r) {
+    len += 1;
+    r = r->next;
+  }
+
+  return len * PGSIZE;
+}
